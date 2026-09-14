@@ -1,2 +1,2 @@
-# istlimf.github.io
+# useyourbrain.github.io
 Love compatibility calculator
