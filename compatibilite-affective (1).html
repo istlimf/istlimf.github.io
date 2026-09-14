@@ -1,0 +1,1399 @@
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compatibilité affective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ---------------------------------------------------------------- thèmes */
+:root{
+  --r: 18px;
+  --font-d: "Fraunces", Georgia, serif;
+  --font-u: "Outfit", "Segoe UI", system-ui, sans-serif;
+  --glow: transparent;
+}
+[data-theme="pastel"]{
+  color-scheme: light;
+  --bg:#FBF6FF; --surface:#FFFFFF; --surface-2:#FCF4FA;
+  --line:#EFE0F7; --ink:#4B3A5E; --ink-soft:#8E7DA8;
+  --accent:#E88FB8; --accent-ink:#FFFFFF;
+  --shadow:0 14px 34px -18px rgba(150,110,190,.55);
+  --glow:rgba(255,190,225,.55);
+  --c1:#F4A6C0; --c2:#FFC2A1; --c3:#FFE09A; --c4:#B6E8C2; --c5:#9EDDE8;
+  --c6:#A8C6F7; --c7:#C3B4F5; --c8:#EFB2EC; --c9:#F6A8B6;
+  --empty:#EDE4F3;
+}
+[data-theme="clair"]{
+  color-scheme: light;
+  --bg:#F4F5F7; --surface:#FFFFFF; --surface-2:#F8F9FB;
+  --line:#E2E5EA; --ink:#242833; --ink-soft:#6C7280;
+  --accent:#6B5E8C; --accent-ink:#FFFFFF;
+  --shadow:0 10px 26px -20px rgba(30,35,50,.5);
+  --c1:#D98BA5; --c2:#E0A27E; --c3:#D7BB68; --c4:#7FC79A; --c5:#6FB8C8;
+  --c6:#7FA0D8; --c7:#978CD4; --c8:#C68CC4; --c9:#D88A98;
+  --empty:#E7E9ED;
+}
+[data-theme="sombre"]{
+  color-scheme: dark;
+  --bg:#15131C; --surface:#1E1B28; --surface-2:#241F31;
+  --line:#302B40; --ink:#ECE7F5; --ink-soft:#9C93B0;
+  --accent:#C9A6F0; --accent-ink:#241F31;
+  --shadow:0 16px 32px -22px rgba(0,0,0,.9);
+  --c1:#E97FA8; --c2:#F0A06F; --c3:#E0BC66; --c4:#5FC392; --c5:#54B5C8;
+  --c6:#7BA3E8; --c7:#9C8BEE; --c8:#CE86D8; --c9:#E8899C;
+  --empty:#2C2739;
+}
+
+/* --------------------------------------------------------------- socle */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-u); font-weight:350; font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+[data-theme="pastel"] body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(60vw 40vw at 8% -5%, rgba(255,199,224,.55), transparent 70%),
+    radial-gradient(50vw 40vw at 98% 8%, rgba(200,232,255,.55), transparent 70%),
+    radial-gradient(60vw 50vw at 50% 108%, rgba(212,247,224,.5), transparent 70%);
+}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2.5px solid var(--accent); outline-offset:3px; border-radius:8px}
+
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+
+/* -------------------------------------------------------------- entête */
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:26px}
+h1{
+  font-family:var(--font-d); font-optical-sizing:auto;
+  font-weight:600; font-size:clamp(28px,4.4vw,44px); line-height:1.02;
+  margin:0; letter-spacing:-.015em;
+}
+h1 em{font-style:italic;font-weight:400}
+.sub{color:var(--ink-soft);font-size:14px;margin:6px 0 0;max-width:46ch}
+
+.themes{display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);
+  padding:5px;border-radius:999px;box-shadow:var(--shadow)}
+.themes button{padding:8px 15px;border-radius:999px;font-size:14px;color:var(--ink-soft);transition:.18s}
+.themes button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:500}
+
+/* ------------------------------------------------------------- profils */
+.people{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--line);font-size:15px;transition:.18s;
+}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .pct{font-family:var(--font-d);font-size:13px;opacity:.75;font-variant-numeric:tabular-nums}
+.chip.add{border-style:dashed;color:var(--ink-soft)}
+
+/* ---------------------------------------------------------------- hero */
+.hero{display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:22px;margin-bottom:34px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.bloom{padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px}
+#flower{width:100%;max-width:320px;height:auto;overflow:visible}
+#flower path{transition:d .4s ease, opacity .3s; cursor:default}
+.bloom .caption{font-size:13px;color:var(--ink-soft);text-align:center;min-height:2.6em;margin:0}
+.bloom .caption b{color:var(--ink);font-weight:500}
+
+.identity{padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.identity input[type=text],.identity input[type=date],.identity textarea{
+  width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:12px;padding:11px 13px;
+}
+.identity textarea{resize:vertical;min-height:76px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12.5px;color:var(--ink-soft)}
+.name-in{font-family:var(--font-d)!important;font-size:26px!important;font-weight:500;padding:8px 12px!important}
+.row2{display:flex;gap:12px;flex-wrap:wrap}
+.row2 .field{flex:1;min-width:160px}
+.tools{display:flex;gap:14px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.tools button{font-size:13.5px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px}
+.tools button:hover{color:var(--accent)}
+
+/* ------------------------------------------------------------ score total */
+.total{display:flex;align-items:baseline;gap:12px}
+.total .big{font-family:var(--font-d);font-size:54px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.total .unit{font-family:var(--font-d);font-size:22px;opacity:.5}
+.total .meta{font-size:13px;color:var(--ink-soft)}
+
+/* ---------------------------------------------------------- catégories */
+.cats{display:flex;flex-direction:column;gap:12px}
+.cat{overflow:hidden}
+.cat-head{display:flex;align-items:center;gap:14px;padding:15px 20px;width:100%;text-align:left}
+.dot{width:13px;height:13px;border-radius:50%;background:var(--cc);flex:none}
+.cat-name{font-family:var(--font-d);font-size:19px;font-weight:500;flex:1;min-width:0}
+.cat-score{font-family:var(--font-d);font-size:19px;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.gauge{width:74px;height:7px;border-radius:99px;background:var(--empty);overflow:hidden;flex:none}
+.gauge i{display:block;height:100%;background:var(--cc);border-radius:99px;transition:width .35s}
+.chev{color:var(--ink-soft);transition:transform .25s;flex:none}
+.cat.open .chev{transform:rotate(180deg)}
+.cat-body{display:none;padding:2px 20px 18px}
+.cat.open .cat-body{display:block}
+
+.crit{display:grid;grid-template-columns:1fr auto auto;gap:10px 18px;align-items:center;
+  padding:9px 0;border-top:1px solid var(--line)}
+.crit .label{font-size:14.5px;padding-right:4px}
+.crit .label-edit{display:none;width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:14.5px}
+.cat.editing .label{display:none}
+.cat.editing .label-edit{display:block}
+.kill{display:none;color:var(--ink-soft);font-size:18px;line-height:1;padding:4px 6px;border-radius:8px}
+.cat.editing .kill{display:block}
+.kill:hover{color:#e0566f;background:var(--surface-2)}
+
+/* segments importance + note */
+.seg{display:flex;align-items:center;gap:4px}
+.seg.imp{gap:5px}
+.seg.imp button{width:16px;height:16px;display:grid;place-items:center;border-radius:50%}
+.seg.imp .pip{width:6px;height:6px;border-radius:50%;background:var(--empty);transition:.15s}
+.seg.imp button:nth-child(2) .pip{width:7px;height:7px}
+.seg.imp button:nth-child(3) .pip{width:8px;height:8px}
+.seg.imp button:nth-child(4) .pip{width:9px;height:9px}
+.seg.imp button:nth-child(5) .pip{width:10px;height:10px}
+.seg.imp button.on .pip{background:var(--cc)}
+.seg.note button{width:11px;height:24px;display:grid;place-items:end center}
+.seg.note i{display:block;width:5px;border-radius:99px;background:var(--empty);transition:.15s}
+.seg.note button.on i{background:var(--cc)}
+.seg-wrap{display:flex;align-items:center;gap:9px}
+.seg-val{font-family:var(--font-d);font-size:13px;width:2.1em;text-align:right;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.seg-lab{font-size:11.5px;color:var(--ink-soft);width:5.6em}
+.crit:not(:first-child) .seg-lab{visibility:hidden}
+.crit:first-child{border-top:0;padding-top:2px}
+
+.addrow{display:none;gap:8px;padding:12px 0 0;border-top:1px solid var(--line);margin-top:2px}
+.cat.editing .addrow{display:flex}
+.addrow input{flex:1;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px}
+.btn{padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:500}
+.btn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+.mini{font-size:12.5px;color:var(--ink-soft);padding:5px 10px;border-radius:8px;border:1px solid var(--line)}
+.mini:hover{border-color:var(--accent);color:var(--accent)}
+.cat-head .mini{opacity:0}
+.cat:hover .cat-head .mini,.cat.editing .cat-head .mini,.cat-head .mini:focus-visible{opacity:1}
+
+footer{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.note-calc{margin:22px auto 0;max-width:62ch;font-size:13px;color:var(--ink-soft)}
+.note-calc summary{cursor:pointer}
+#saved{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);padding:8px 18px;border-radius:999px;font-size:13px;
+  opacity:0;transition:.3s;pointer-events:none;z-index:50}
+#saved.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ------------------------------------------- verrou & mot de passe */
+.veil{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;
+  background:var(--bg);backdrop-filter:blur(6px)}
+.veil[hidden]{display:none}
+.veil .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:28px;width:min(420px,100%);display:flex;flex-direction:column;gap:14px}
+.veil h2{font-family:var(--font-d);font-weight:600;font-size:25px;margin:0;letter-spacing:-.01em}
+.veil p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55}
+.veil input{width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;font-size:16px}
+.veil .err{color:#d6456a;font-size:13.5px;min-height:1.2em}
+[data-theme="sombre"] .veil .err{color:#ff8fa8}
+.veil .acts{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.veil .flower-mini{width:70px;margin:0 auto 2px;opacity:.85}
+.veil textarea{width:100%;min-height:150px;resize:vertical;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:12.5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.45}
+.veil .panel.wide{width:min(620px,100%)}
+.veil .ok{color:#2f9e6b;font-size:13.5px;min-height:1.2em}
+[data-theme="sombre"] .veil .ok{color:#7fd8ab}
+#storeinfo{display:block;margin-top:10px;font-size:12.5px;color:var(--ink-soft)}
+
+#glitter{position:fixed;inset:0;pointer-events:none;z-index:9999}
+#halo{position:fixed;width:26px;height:26px;border-radius:50%;pointer-events:none;z-index:9998;
+  background:radial-gradient(circle,var(--glow),transparent 70%);opacity:0;transform:translate(-50%,-50%)}
+
+@media (pointer:coarse){
+  .seg.imp button{width:28px;height:30px}
+  .seg.note button{width:19px;height:34px}
+  .mini{opacity:1!important}
+}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .crit{grid-template-columns:1fr;gap:8px}
+  .seg-wrap{justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Compatibilité <em>affective</em></h1>
+      <p class="sub">Tes critères d'un côté, les personnes que tu rencontres de l'autre. L'importance que tu donnes à chaque critère vaut pour tout le monde&nbsp;; la note, elle, est propre à chacun·e.</p>
+    </div>
+    <div class="themes" role="group" aria-label="Thème">
+      <button data-theme-set="clair" aria-pressed="false">Clair</button>
+      <button data-theme-set="sombre" aria-pressed="false">Sombre</button>
+      <button data-theme-set="pastel" aria-pressed="false">Pastel ✨</button>
+    </div>
+  </header>
+
+  <nav class="people" id="people" aria-label="Personnes"></nav>
+
+  <section class="hero">
+    <div class="card bloom">
+      <svg id="flower" viewBox="-125 -125 250 250" role="img" aria-label="Aperçu des catégories"></svg>
+      <p class="caption" id="caption"></p>
+    </div>
+
+    <div class="card identity">
+      <div class="total">
+        <span class="big" id="totalVal">—</span><span class="unit">%</span>
+        <span class="meta" id="totalMeta"></span>
+      </div>
+      <div class="field">
+        <label for="pname">Prénom / surnom</label>
+        <input id="pname" class="name-in" type="text" placeholder="Sans nom">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="pmet">Rencontré·e le</label>
+          <input id="pmet" type="date">
+        </div>
+        <div class="field">
+          <label for="pnotes">Notes libres</label>
+          <textarea id="pnotes" placeholder="Ce que tu veux te rappeler…"></textarea>
+        </div>
+      </div>
+      <div class="tools">
+        <button data-act="dup">Dupliquer cette fiche</button>
+        <button data-act="del">Supprimer cette fiche</button>
+        <button data-act="glitter">Paillettes&nbsp;: <span id="glitState">on</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="cats" id="cats"></div>
+
+  <footer>
+    <button class="btn ghost" data-act="addcat">Ajouter une catégorie</button>
+    <button class="btn ghost" data-act="export">Exporter mes données</button>
+    <button class="btn ghost" data-act="import">Importer un fichier</button>
+    <button class="btn ghost" data-act="link" id="linkBtn">Lier un fichier de sauvegarde</button>
+    <button class="btn ghost" data-act="pass" id="passBtn">Protéger par un mot de passe</button>
+    <button class="btn ghost" data-act="unprotect" id="unprotBtn" hidden>Retirer la protection</button>
+    <button class="btn ghost" data-act="lock" id="lockBtn" hidden>Verrouiller maintenant</button>
+    <button class="btn ghost" data-act="reset">Repartir de zéro</button>
+  </footer>
+  <span id="storeinfo"></span>
+
+  <details class="note-calc">
+    <summary>Comment le score est calculé</summary>
+    <p>Chaque catégorie vaut la somme des (importance × note) divisée par (somme des importances × 10). Les critères que tu n'as pas encore notés sont ignorés, donc le score reste juste même quand la fiche est à moitié remplie. Le total est la moyenne des catégories renseignées — comme dans le fichier Excel d'origine, chaque catégorie pèse pareil.</p>
+  </details>
+</div>
+
+<div class="veil" id="ask" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+    <svg class="flower-mini" viewBox="-125 -125 250 250" aria-hidden="true" id="askFlower"></svg>
+    <h2 id="askTitle"></h2>
+    <p id="askMsg"></p>
+    <input type="password" id="askP1" autocomplete="current-password" aria-labelledby="askTitle">
+    <input type="password" id="askP2" autocomplete="new-password" placeholder="Répète le mot de passe" hidden>
+    <p class="err" id="askErr" role="alert"></p>
+    <div class="acts">
+      <button class="btn ghost" id="askCancel">Annuler</button>
+      <button class="btn" id="askOk">Valider</button>
+    </div>
+  </div>
+</div>
+
+<div class="veil" id="box" hidden>
+  <div class="panel wide" role="dialog" aria-modal="true" aria-labelledby="boxTitle">
+    <h2 id="boxTitle"></h2>
+    <p id="boxMsg"></p>
+    <textarea id="boxText" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    <p class="ok" id="boxNote" role="status"></p>
+    <div class="acts" id="boxActs"></div>
+  </div>
+</div>
+
+<div id="saved">Enregistré</div>
+<canvas id="glitter" aria-hidden="true"></canvas>
+<div id="halo" aria-hidden="true"></div>
+<input type="file" id="filein" accept=".json,application/json" hidden>
+
+<script>
+/* =========================================================== stockage */
+const KEY = "compat-affective:v1";
+const Store = (() => {
+  const mem = {};
+  const w = (typeof window !== "undefined" && window.storage && typeof window.storage.get === "function") ? window.storage : null;
+  return {
+    async get(){
+      if(w){ try{ const r = await w.get(KEY); if(r && r.value) return JSON.parse(r.value); }catch(e){} }
+      try{ const v = localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){}
+      return mem[KEY] || null;
+    },
+    async set(obj){
+      const s = JSON.stringify(obj);
+      mem[KEY] = obj;
+      if(w){ try{ await w.set(KEY, s); return; }catch(e){} }
+      try{ localStorage.setItem(KEY, s); }catch(e){}
+    }
+  };
+})();
+
+/* ========================================================= chiffrement */
+/* AES-GCM 256 bits, clé dérivée du mot de passe par PBKDF2-SHA256.
+   Le mot de passe n'est jamais écrit nulle part : seule la clé dérivée
+   vit en mémoire, et elle disparaît au verrouillage. */
+const SUB = (typeof crypto !== "undefined" && crypto.subtle) ? crypto.subtle : null;
+const ITER = 310000;
+const b64 = u => btoa(String.fromCharCode(...new Uint8Array(u)));
+const ub64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+const Lock = {
+  key: null,        // CryptoKey en mémoire, null = verrouillé ou non protégé
+  salt: null,
+  on: false,        // le coffre est-il protégé ?
+
+  async derive(pass, salt){
+    const base = await SUB.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+    return SUB.deriveKey({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" },
+      base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+  },
+  async seal(obj){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await SUB.encrypt({ name: "AES-GCM", iv }, this.key,
+      new TextEncoder().encode(JSON.stringify(obj)));
+    return { enc: 1, u: Date.now(), kdf: "PBKDF2-SHA256", it: ITER, salt: b64(this.salt), iv: b64(iv), ct: b64(ct) };
+  },
+  async open(env, pass){
+    const salt = ub64(env.salt);
+    const key = await this.derive(pass, salt);
+    const pt = await SUB.decrypt({ name: "AES-GCM", iv: ub64(env.iv) }, key, ub64(env.ct));
+    return { data: JSON.parse(new TextDecoder().decode(pt)), key, salt };
+  },
+  async setPass(pass){
+    this.salt = crypto.getRandomValues(new Uint8Array(16));
+    this.key = await this.derive(pass, this.salt);
+    this.on = true;
+  },
+  clear(){ this.key = null; this.salt = null; this.on = false; }
+};
+
+/* ---------------------------------------------------- dialogue modal */
+function askPass({ title, msg, ok = "Valider", twice = false, cancel = true, err: err0 = "" }){
+  return new Promise(resolve => {
+    const v = $("#ask"), p1 = $("#askP1"), p2 = $("#askP2"), err = $("#askErr");
+    $("#askTitle").textContent = title;
+    $("#askMsg").textContent = msg;
+    $("#askOk").textContent = ok;
+    p1.value = ""; p2.value = ""; err.textContent = err0;
+    p1.placeholder = twice ? "Choisis un mot de passe" : "Ton mot de passe";
+    p1.autocomplete = twice ? "new-password" : "current-password";
+    p2.hidden = !twice;
+    $("#askCancel").hidden = !cancel;
+    v.hidden = false;
+    miniFlower();
+    setTimeout(() => p1.focus(), 40);
+
+    const done = val => {
+      v.hidden = true;
+      $("#askOk").onclick = null; $("#askCancel").onclick = null; v.onkeydown = null;
+      resolve(val);
+    };
+    const submit = () => {
+      const a = p1.value;
+      if(!a){ err.textContent = "Il faut saisir quelque chose."; return; }
+      if(twice){
+        if(a.length < 8){ err.textContent = "Huit caractères minimum — vise plutôt une phrase entière."; return; }
+        if(a !== p2.value){ err.textContent = "Les deux saisies ne correspondent pas."; return; }
+      }
+      done(a);
+    };
+    $("#askOk").onclick = submit;
+    $("#askCancel").onclick = () => done(null);
+    v.onkeydown = e => {
+      if(e.key === "Enter"){ e.preventDefault(); submit(); }
+      if(e.key === "Escape" && cancel){ e.preventDefault(); done(null); }
+    };
+  });
+}
+/* ------------------------------------------------- boîte générique */
+function box({ title, msg, text = null, readonly = false, buttons = [] }){
+  return new Promise(resolve => {
+    const v = $("#box"), ta = $("#boxText"), acts = $("#boxActs"), note = $("#boxNote");
+    $("#boxTitle").textContent = title;
+    $("#boxMsg").textContent = msg;
+    note.textContent = "";
+    ta.hidden = text === null;
+    ta.readOnly = readonly;
+    ta.value = text === null ? "" : text;
+    acts.innerHTML = "";
+    v.hidden = false;
+
+    const done = i => { v.onkeydown = null; v.hidden = true; resolve(i); };
+    buttons.forEach((b, i) => {
+      const el = document.createElement("button");
+      el.className = b.primary ? "btn" : "btn ghost";
+      el.textContent = b.label;
+      el.onclick = async () => {
+        if(b.run){ const keep = await b.run({ value: () => ta.value, note: m => note.textContent = m }); if(keep) return; }
+        done(i);
+      };
+      acts.appendChild(el);
+    });
+    v.onkeydown = e => { if(e.key === "Escape"){ e.preventDefault(); done(-1); } };
+    setTimeout(() => {
+      if(text !== null && readonly){ ta.focus(); ta.select(); }
+      else if(text !== null){ ta.focus(); }
+      else acts.lastElementChild && acts.lastElementChild.focus();
+    }, 40);
+  });
+}
+async function toClipboard(t){
+  try{ await navigator.clipboard.writeText(t); return true; }
+  catch(e){
+    try{ const ta = $("#boxText"); ta.focus(); ta.select(); return document.execCommand("copy"); }
+    catch(e2){ return false; }
+  }
+}
+
+function miniFlower(){
+  const n = 9; let out = "";
+  for(let i = 0; i < n; i++){
+    const a = (-90 + i * 360 / n) * Math.PI / 180, len = 96, inner = 26;
+    const w = Math.tan(Math.PI / n) * len * 0.82, ct = Math.cos(a), st = Math.sin(a);
+    const P = (x, y) => `${(x * ct - y * st).toFixed(1)},${(x * st + y * ct).toFixed(1)}`;
+    out += `<path d="M${P(13, 0)} Q${P(len * .45, w)} ${P(len, 0)} Q${P(len * .45, -w)} ${P(13, 0)} Z" fill="var(--c${i + 1})" opacity=".7"/>`;
+  }
+  out += `<circle r="22" fill="var(--surface)" stroke="var(--line)"/>`;
+  const f = document.getElementById("askFlower");
+  if(f) f.innerHTML = out;
+}
+
+/* ================================================ fichier de sauvegarde */
+/* Relie l'application à un vrai fichier .json sur le disque. Chaque
+   enregistrement y est recopié, donc les données survivent à un
+   nettoyage du navigateur, à un changement de dossier, à tout.
+   Chrome et Edge uniquement — Firefox et Safari n'ont pas cette API. */
+const FS_OK = typeof window !== "undefined" && typeof window.showSaveFilePicker === "function";
+const FileLink = {
+  handle: null, ok: false, name: "",
+
+  db(){
+    return new Promise((res, rej) => {
+      const q = indexedDB.open("compat-fs", 1);
+      q.onupgradeneeded = () => q.result.createObjectStore("h");
+      q.onsuccess = () => res(q.result);
+      q.onerror = () => rej(q.error);
+    });
+  },
+  async idb(mode, fn){
+    try{
+      const db = await this.db();
+      return await new Promise((res, rej) => {
+        const tx = db.transaction("h", mode), st = tx.objectStore("h");
+        const r = fn(st);
+        tx.oncomplete = () => res(r && r.result);
+        tx.onerror = () => rej(tx.error);
+      });
+    }catch(e){ return null; }
+  },
+  async init(){
+    if(!FS_OK) return;
+    this.handle = await this.idb("readonly", st => st.get("handle"));
+    if(!this.handle) return;
+    this.name = this.handle.name || "";
+    try{
+      this.ok = (await this.handle.queryPermission({ mode: "readwrite" })) === "granted";
+    }catch(e){ this.ok = false; }
+  },
+  async reconnect(){
+    if(!this.handle) return false;
+    try{ this.ok = (await this.handle.requestPermission({ mode: "readwrite" })) === "granted"; }
+    catch(e){ this.ok = false; }
+    return this.ok;
+  },
+  async choose(){
+    const h = await window.showSaveFilePicker({
+      suggestedName: "mes-fiches-compatibilite.json",
+      types: [{ description: "Sauvegarde", accept: { "application/json": [".json"] } }]
+    });
+    this.handle = h; this.ok = true; this.name = h.name || "";
+    await this.idb("readwrite", st => st.put(h, "handle"));
+  },
+  async forget(){
+    this.handle = null; this.ok = false; this.name = "";
+    await this.idb("readwrite", st => st.delete("handle"));
+  },
+  async read(){
+    if(!this.handle || !this.ok) return null;
+    try{
+      const t = await (await this.handle.getFile()).text();
+      return t.trim() ? JSON.parse(t) : null;
+    }catch(e){ return null; }
+  },
+  async write(payload){
+    if(!this.handle || !this.ok) return;
+    try{
+      const w = await this.handle.createWritable();
+      await w.write(JSON.stringify(payload, null, 2));
+      await w.close();
+    }catch(e){ this.ok = false; }
+  }
+};
+const stamp = o => (o && (o.updated || o.u)) || 0;
+async function loadRaw(){
+  const a = await Store.get();
+  const b = await FileLink.read();
+  if(!a) return b;
+  if(!b) return a;
+  return stamp(b) > stamp(a) ? b : a;
+}
+
+/* ============================================================ données */
+const uid = () => Math.random().toString(36).slice(2, 9);
+const C = (name, crits) => ({ id: uid(), name, criteria: crits.map(l => ({ id: uid(), label: l, imp: null })) });
+
+function seed(){
+  return {
+    version: 1,
+    theme: "pastel",
+    glitter: true,
+    categories: [
+      C("Résonnance mentale", [
+        "Discussions intellectuellement stimulantes",
+        "Connaissances culturelles",
+        "Sait faire la différence entre avis personnel et réalité",
+        "Auto-critique",
+        "Capacité à rechercher l'information par soi-même",
+        "A des hobbys / passions (éviter que la relation soit le centre)",
+        "Humour",
+        "Hobby en commun",
+        "Est conscient de sa responsabilité masculine dans ce monde de dépravé",
+        "Ambitieux"
+      ]),
+      C("Intelligence émotionnelle", [
+        "Affection",
+        "Sait approcher sans attendre en retour",
+        "Capable d'écoute, pas de manipulation etc",
+        "Prend des initiatives, n'est pas dans l'attente",
+        "Capable de comprendre en profondeur quand je lui parle",
+        "Sait faire la part des choses",
+        "Indépendant émotionnellement",
+        "Est capable d'auto-critique et de questionnement",
+        "Patience",
+        "A du recul sur la condition féminine",
+        "Se connaît lui-même",
+        "Aime les animaux",
+        "Jalousie (à toi de voir si tu aimes ou pas)",
+        "Se fait confiance",
+        "Cohérence parole et action",
+        "Me fait sentir qu'il / elle est maître de soi-même",
+        "Me fait sentir en sécurité",
+        "Me fait sentir capable de gérer son monde et la réalité du monde",
+        "Capable d'amitié avec le même sexe",
+        "Stable, n'éponge pas mes états"
+      ]),
+      C("Spiritualité", [
+        "Être accordé sur les perspectives spirituelles (même religion, respect des animaux, vision du monde, etc.)",
+        "Asymétrie productive (approches différentes qui élargissent la perspective)",
+        "Discipline propre",
+        "Chemin propre",
+        "Ne renonce pas à son cerveau au profit d'autres gens"
+      ]),
+      C("Richesse", [
+        "Générosité financière",
+        "Générosité émotionnelle",
+        "Richesse intellectuelle",
+        "Sait gérer son argent",
+        "Petites attentions (petits mots etc)",
+        "Générosité temporelle"
+      ]),
+      C("Physique", [
+        "Jsp mets ce que tu veux"
+      ]),
+      C("Sexualité", [
+        "Respect du consentement, intégrité et désir",
+        "Tension mutuelle",
+        "Respect du corps tel qu'il est",
+        "Ouverture globale / non-jugement",
+        "Discipline sexuelle",
+        "Sait utiliser ses avantages"
+      ]),
+      C("Hygiène de vie", [
+        "Discipline",
+        "Sait garder le lieu de vie propre",
+        "Sait se laver les fesses mdr",
+        "Fait bien à manger",
+        "Ne fume pas",
+        "Sportif",
+        "Ne boit pas"
+      ]),
+      C("Projection future", [
+        "Ne veut pas d'enfant / veut des enfants",
+        "Potentiel d'évolution global dans le futur",
+        "Même vision du couple"
+      ]),
+      C("Soi-même", [
+        "J'arrive à rester moi-même avec cette personne",
+        "Je me sens amoureuse",
+        "Je me sens en sécurité",
+        "Je me sens apaisée mentalement",
+        "La relation me fait évoluer",
+        "Je suis apaisée de mon choix",
+        "Me fait sentir belle (en restant réaliste hun)",
+        "Me fait sentir aimée"
+      ])
+    ],
+    profiles: [ newProfile("Première fiche") ],
+    active: null
+  };
+}
+function newProfile(name){ return { id: uid(), name: name || "", met: "", notes: "", scores: {} }; }
+
+let S = seed();
+S.active = S.profiles[0].id;
+
+const cur = () => S.profiles.find(p => p.id === S.active) || S.profiles[0];
+
+/* ============================================================== calcul */
+function catScore(cat, prof){
+  let num = 0, den = 0, rated = 0;
+  for(const c of cat.criteria){
+    const sc = prof.scores[c.id];
+    const im = c.imp;
+    if(sc === undefined || sc === null || !im) continue;
+    num += im * sc; den += im * 10; rated++;
+  }
+  return { value: den ? num / den : null, rated, total: cat.criteria.length };
+}
+function totalScore(prof){
+  const vals = S.categories.map(c => catScore(c, prof).value).filter(v => v !== null);
+  if(!vals.length) return null;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
+const pct = v => v === null ? "—" : Math.round(v * 100);
+
+/* =========================================================== rendu DOM */
+const $ = s => document.querySelector(s);
+const catsEl = $("#cats"), peopleEl = $("#people");
+const cc = i => `var(--c${(i % 9) + 1})`;
+
+function buildCats(){
+  catsEl.innerHTML = "";
+  S.categories.forEach((cat, i) => {
+    const el = document.createElement("section");
+    el.className = "card cat";
+    el.style.setProperty("--cc", cc(i));
+    el.dataset.cat = cat.id;
+
+    const rows = cat.criteria.map(c => `
+      <div class="crit" data-crit="${c.id}">
+        <div>
+          <span class="label">${esc(c.label)}</span>
+          <input class="label-edit" type="text" value="${esc(c.label)}" aria-label="Nom du critère">
+        </div>
+        <div class="seg-wrap">
+          <span class="seg-lab">importance</span>
+          ${segImp(c.id)}
+        </div>
+        <div class="seg-wrap">
+          <span class="seg-lab">note</span>
+          ${segNote(c.id)}
+          <span class="seg-val" data-val="${c.id}">—</span>
+          <button class="kill" data-act="delcrit" title="Supprimer ce critère" aria-label="Supprimer le critère ${esc(c.label)}">×</button>
+        </div>
+      </div>`).join("");
+
+    el.innerHTML = `
+      <div class="cat-head">
+        <span class="dot"></span>
+        <button class="cat-name" data-act="toggle" aria-expanded="false" style="text-align:left">${esc(cat.name)}</button>
+        <input class="label-edit cat-name-edit" type="text" value="${esc(cat.name)}" aria-label="Nom de la catégorie" style="flex:1;display:none">
+        <span class="gauge"><i style="width:0%"></i></span>
+        <span class="cat-score">—</span>
+        <button class="mini" data-act="edit">Éditer</button>
+        <button class="mini kill" data-act="delcat" style="display:none">Supprimer</button>
+        <span class="chev" aria-hidden="true">⌄</span>
+      </div>
+      <div class="cat-body">
+        ${rows}
+        <div class="addrow">
+          <input type="text" placeholder="Ajouter un critère…" aria-label="Nouveau critère">
+          <button class="btn" data-act="addcrit">Ajouter</button>
+        </div>
+      </div>`;
+    catsEl.appendChild(el);
+  });
+  syncAll();
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m])); }
+
+function segImp(id){
+  let h = `<div class="seg imp" role="radiogroup" aria-label="Importance de 1 à 5" data-kind="imp" data-for="${id}">`;
+  for(let v = 1; v <= 5; v++) h += `<button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="${v}" aria-label="${v} sur 5"><span class="pip"></span></button>`;
+  return h + "</div>";
+}
+function segNote(id){
+  let h = `<div class="seg note" role="radiogroup" aria-label="Note de 1 à 10" data-kind="note" data-for="${id}">`;
+  for(let v = 1; v <= 10; v++) h += `<button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="${v}" aria-label="${v} sur 10"><i style="height:${7 + v * 1.6}px"></i></button>`;
+  return h + "</div>";
+}
+
+/* ------------------------------------------------- synchronisation UI */
+function syncAll(){
+  const p = cur();
+  document.querySelectorAll(".seg").forEach(seg => {
+    const id = seg.dataset.for, kind = seg.dataset.kind;
+    const crit = findCrit(id);
+    const val = kind === "imp" ? (crit ? crit.imp : null) : p.scores[id];
+    let focusable = null;
+    seg.querySelectorAll("button").forEach(b => {
+      const v = +b.dataset.v;
+      const on = val != null && v <= val;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", val === v ? "true" : "false");
+      b.tabIndex = -1;
+      if(val === v) focusable = b;
+    });
+    (focusable || seg.firstElementChild).tabIndex = 0;
+  });
+  document.querySelectorAll("[data-val]").forEach(s => {
+    const v = p.scores[s.dataset.val];
+    s.textContent = v == null ? "—" : v;
+  });
+  refreshScores();
+}
+
+function refreshScores(){
+  const p = cur();
+  S.categories.forEach((cat, i) => {
+    const el = catsEl.querySelector(`[data-cat="${cat.id}"]`);
+    if(!el) return;
+    const r = catScore(cat, p);
+    el.querySelector(".cat-score").textContent = r.value === null ? "—" : pct(r.value) + "%";
+    el.querySelector(".gauge i").style.width = (r.value === null ? 0 : r.value * 100) + "%";
+  });
+  const t = totalScore(p);
+  $("#totalVal").textContent = pct(t);
+  const rated = S.categories.reduce((a, c) => a + catScore(c, p).rated, 0);
+  const all = S.categories.reduce((a, c) => a + c.criteria.length, 0);
+  $("#totalMeta").textContent = `${rated} critère${rated > 1 ? "s" : ""} noté${rated > 1 ? "s" : ""} sur ${all}`;
+  drawFlower();
+  renderPeople();
+}
+
+/* ---------------------------------------------- état ouvert / édition */
+function openCat(el, on){
+  el.classList.toggle("open", on);
+  el.querySelector("[data-act='toggle']").setAttribute("aria-expanded", String(on));
+}
+function setEdit(el, on){
+  el.classList.toggle("editing", on);
+  if(on) openCat(el, true);
+  el.querySelector("[data-act='toggle']").style.display = on ? "none" : "";
+  el.querySelector(".cat-name-edit").style.display = on ? "block" : "none";
+  el.querySelector("[data-act='delcat']").style.display = on ? "block" : "none";
+  el.querySelector("[data-act='edit']").textContent = on ? "Terminé" : "Éditer";
+}
+function snapshot(){
+  const m = {};
+  catsEl.querySelectorAll(".cat").forEach(el => m[el.dataset.cat] = {
+    open: el.classList.contains("open"), edit: el.classList.contains("editing")
+  });
+  return m;
+}
+function restore(m){
+  catsEl.querySelectorAll(".cat").forEach(el => {
+    const s = m[el.dataset.cat]; if(!s) return;
+    if(s.open) openCat(el, true);
+    if(s.edit) setEdit(el, true);
+  });
+}
+
+function findCrit(id){
+  for(const c of S.categories){ const f = c.criteria.find(x => x.id === id); if(f) return f; }
+  return null;
+}
+
+/* -------------------------------------------------------------- fleur */
+function drawFlower(){
+  const svg = $("#flower"), p = cur(), n = S.categories.length;
+  const R = 104, inner = 26;
+  let out = "";
+  S.categories.forEach((cat, i) => {
+    const r = catScore(cat, p).value;
+    const span = R - inner - 10;
+    const len = inner + (r === null ? span * .34 : 10 + r * span);
+    const a = (-90 + i * 360 / n) * Math.PI / 180;
+    const w = Math.tan(Math.PI / n) * len * 0.82;
+    const ct = Math.cos(a), st = Math.sin(a);
+    const P = (x, y) => `${(x * ct - y * st).toFixed(1)},${(x * st + y * ct).toFixed(1)}`;
+    const d = `M${P(inner * .5, 0)} Q${P(len * .45, w)} ${P(len, 0)} Q${P(len * .45, -w)} ${P(inner * .5, 0)} Z`;
+    out += `<path d="${d}" fill="${cc(i)}" opacity="${r === null ? .28 : .82}" data-i="${i}"><title>${esc(cat.name)} : ${r === null ? "pas encore noté" : pct(r) + "%"}</title></path>`;
+  });
+  out += `<circle r="${inner - 4}" fill="var(--surface)" stroke="var(--line)"/>`;
+  const t = totalScore(p);
+  out += `<text y="6" text-anchor="middle" font-family="Fraunces,serif" font-size="19" font-weight="600" fill="var(--ink)">${pct(t)}${t === null ? "" : "%"}</text>`;
+  svg.innerHTML = out;
+  svg.querySelectorAll("path").forEach(path => {
+    path.addEventListener("mouseenter", () => {
+      const i = +path.dataset.i, r = catScore(S.categories[i], cur());
+      $("#caption").innerHTML = `<b>${esc(S.categories[i].name)}</b> — ${r.value === null ? "pas encore noté" : pct(r.value) + "% · " + r.rated + "/" + r.total + " critères"}`;
+    });
+    path.addEventListener("mouseleave", () => setCaption());
+  });
+  setCaption();
+}
+function setCaption(){
+  const p = cur();
+  $("#caption").textContent = p.name ? `Un pétale par catégorie, pour ${p.name}.` : "Un pétale par catégorie. Survole-les pour le détail.";
+}
+
+/* ------------------------------------------------------------ profils */
+function renderPeople(){
+  peopleEl.innerHTML = "";
+  S.profiles.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.setAttribute("aria-current", p.id === S.active ? "true" : "false");
+    const t = totalScore(p);
+    b.innerHTML = `${esc(p.name || "Sans nom")} <span class="pct">${pct(t)}${t === null ? "" : "%"}</span>`;
+    b.onclick = () => { S.active = p.id; loadProfile(); save(); };
+    peopleEl.appendChild(b);
+  });
+  const add = document.createElement("button");
+  add.className = "chip add";
+  add.textContent = "+ nouvelle personne";
+  add.onclick = () => {
+    const p = newProfile("");
+    S.profiles.push(p); S.active = p.id; loadProfile(); save(); $("#pname").focus();
+  };
+  peopleEl.appendChild(add);
+}
+function loadProfile(){
+  const p = cur();
+  $("#pname").value = p.name; $("#pmet").value = p.met; $("#pnotes").value = p.notes;
+  syncAll();
+}
+
+/* ------------------------------------------------------- interactions */
+document.addEventListener("click", e => {
+  const seg = e.target.closest(".seg button");
+  if(seg){ pickSeg(seg); return; }
+  const act = e.target.closest("[data-act]");
+  if(!act) return;
+  const a = act.dataset.act, catEl = act.closest(".cat");
+  const cat = catEl ? S.categories.find(c => c.id === catEl.dataset.cat) : null;
+
+  if(a === "toggle"){ openCat(catEl, !catEl.classList.contains("open")); }
+  else if(a === "edit"){ setEdit(catEl, !catEl.classList.contains("editing")); }
+  else if(a === "delcrit"){
+    const row = act.closest(".crit"), id = row.dataset.crit;
+    cat.criteria = cat.criteria.filter(c => c.id !== id);
+    S.profiles.forEach(p => delete p.scores[id]);
+    row.remove(); refreshScores(); save();
+  }
+  else if(a === "addcrit"){
+    const input = catEl.querySelector(".addrow input"), v = input.value.trim();
+    if(!v) return;
+    cat.criteria.push({ id: uid(), label: v, imp: null });
+    input.value = "";
+    const snap = snapshot(); buildCats(); restore(snap);
+    const el = catsEl.querySelector(`[data-cat="${cat.id}"]`);
+    setEdit(el, true);
+    el.querySelector(".addrow input").focus();
+    save();
+  }
+  else if(a === "delcat"){
+    if(!confirm(`Supprimer la catégorie « ${cat.name} » et tous ses critères ?`)) return;
+    cat.criteria.forEach(c => S.profiles.forEach(p => delete p.scores[c.id]));
+    S.categories = S.categories.filter(c => c.id !== cat.id);
+    const snap = snapshot(); buildCats(); restore(snap); save();
+  }
+  else if(a === "addcat"){
+    const name = prompt("Nom de la nouvelle catégorie ?");
+    if(!name || !name.trim()) return;
+    S.categories.push({ id: uid(), name: name.trim(), criteria: [] });
+    const snap = snapshot(); buildCats(); restore(snap); save();
+    const el = catsEl.lastElementChild;
+    setEdit(el, true);
+    if(el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.querySelector(".addrow input").focus();
+  }
+  else if(a === "dup"){
+    const p = cur(), n = JSON.parse(JSON.stringify(p));
+    n.id = uid(); n.name = (p.name || "Sans nom") + " (copie)";
+    S.profiles.push(n); S.active = n.id; loadProfile(); save();
+  }
+  else if(a === "del"){
+    if(S.profiles.length === 1){ alert("C'est ta dernière fiche — renomme-la plutôt."); return; }
+    if(!confirm(`Supprimer la fiche de ${cur().name || "cette personne"} ?`)) return;
+    S.profiles = S.profiles.filter(p => p.id !== S.active);
+    S.active = S.profiles[0].id; loadProfile(); save();
+  }
+  else if(a === "link"){ toggleLink(); }
+  else if(a === "pass"){ managePass(); }
+  else if(a === "unprotect"){ unprotect(); }
+  else if(a === "lock"){ lockNow(); }
+  else if(a === "glitter"){ S.glitter = !S.glitter; applyGlitter(); save(); }
+  else if(a === "export"){ exportJSON(); }
+  else if(a === "import"){ importDialog(); }
+  else if(a === "reset"){
+    if(!confirm("Tout effacer et revenir aux critères d'origine ? Tes fiches seront perdues.")) return;
+    Lock.clear(); clearTimeout(idleT); S = seed(); S.active = S.profiles[0].id; applyTheme(); applyGlitter(); buildCats(); loadProfile(); showSec(); save();
+  }
+});
+
+function pickSeg(btn){
+  const seg = btn.closest(".seg"), id = seg.dataset.for, v = +btn.dataset.v;
+  if(seg.dataset.kind === "imp"){
+    const c = findCrit(id);
+    c.imp = (c.imp === v) ? null : v;
+  } else {
+    const p = cur();
+    if(p.scores[id] === v) delete p.scores[id]; else p.scores[id] = v;
+  }
+  syncAll(); save();
+}
+
+document.addEventListener("keydown", e => {
+  const btn = e.target.closest(".seg button");
+  if(!btn) return;
+  const seg = btn.closest(".seg"), all = [...seg.querySelectorAll("button")], i = all.indexOf(btn);
+  let n = null;
+  if(e.key === "ArrowRight" || e.key === "ArrowUp") n = all[Math.min(i + 1, all.length - 1)];
+  if(e.key === "ArrowLeft" || e.key === "ArrowDown") n = all[Math.max(i - 1, 0)];
+  if(e.key === "Home") n = all[0];
+  if(e.key === "End") n = all[all.length - 1];
+  if(e.key === "Backspace" || e.key === "Delete"){
+    e.preventDefault();
+    const id = seg.dataset.for;
+    if(seg.dataset.kind === "imp") findCrit(id).imp = null; else delete cur().scores[id];
+    syncAll(); save(); seg.querySelector("button").focus(); return;
+  }
+  if(n){ e.preventDefault(); pickSeg(n); n.focus(); }
+});
+
+catsEl.addEventListener("input", e => {
+  if(e.target.classList.contains("cat-name-edit")){
+    const el = e.target.closest(".cat");
+    S.categories.find(c => c.id === el.dataset.cat).name = e.target.value;
+    el.querySelector("[data-act='toggle']").textContent = e.target.value;
+    drawFlower(); save();
+  } else if(e.target.classList.contains("label-edit")){
+    const row = e.target.closest(".crit");
+    if(!row) return;
+    findCrit(row.dataset.crit).label = e.target.value;
+    row.querySelector(".label").textContent = e.target.value;
+    save();
+  }
+});
+catsEl.addEventListener("keydown", e => {
+  if(e.key === "Enter" && e.target.matches(".addrow input")){
+    e.preventDefault();
+    e.target.closest(".addrow").querySelector("[data-act='addcrit']").click();
+  }
+});
+
+["pname", "pmet", "pnotes"].forEach(id => {
+  $("#" + id).addEventListener("input", e => {
+    const p = cur();
+    p[{ pname: "name", pmet: "met", pnotes: "notes" }[id]] = e.target.value;
+    if(id === "pname"){ renderPeople(); setCaption(); }
+    save();
+  });
+});
+
+/* -------------------------------------------------------- import/export */
+async function exportJSON(){
+  const payload = (Lock.on && Lock.key) ? await Lock.seal(S) : S;
+  const txt = JSON.stringify(payload, null, 2);
+  await box({
+    title: "Exporter tes données",
+    msg: Lock.on
+      ? "Ce contenu est chiffré : il faudra ton mot de passe pour le relire. Copie-le, ou télécharge-le en fichier."
+      : "Copie ce texte et colle-le où tu veux, ou télécharge-le en fichier. Si le téléchargement ne fait rien, c'est que la page est ouverte dans un aperçu qui l'interdit — utilise la copie.",
+    text: txt, readonly: true,
+    buttons: [
+      { label: "Copier le texte", primary: true, run: async ctx => {
+          ctx.note(await toClipboard(txt)
+            ? "Copié. Tu peux le coller dans un message."
+            : "La copie automatique est bloquée ici : sélectionne le texte puis Ctrl+C (ou Cmd+C).");
+          return true;
+        } },
+      { label: "Télécharger le fichier", run: async ctx => {
+          try{
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([txt], { type: "application/json" }));
+            a.download = Lock.on ? "compatibilite-chiffre.json" : "compatibilite-affective.json";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            ctx.note("Si rien n'apparaît dans tes téléchargements, la page est dans un aperçu qui les bloque : utilise la copie.");
+          }catch(e){ ctx.note("Téléchargement impossible ici. Utilise la copie du texte."); }
+          return true;
+        } },
+      { label: "Fermer" }
+    ]
+  });
+}
+
+async function importDialog(){
+  await box({
+    title: "Importer des données",
+    msg: "Colle ici le texte reçu, ou choisis un fichier d'export. Tu pourras ensuite ajouter les fiches aux tiennes, ou tout remplacer.",
+    text: "",
+    buttons: [
+      { label: "Choisir un fichier…", run: async () => { $("#filein").click(); return false; } },
+      { label: "Charger le texte", primary: true, run: async ctx => {
+          const v = ctx.value().trim();
+          if(!v){ ctx.note("La zone est vide."); return true; }
+          let d; try{ d = JSON.parse(v); }
+          catch(e){ ctx.note("Ce texte n'est pas un export valide — vérifie qu'il est complet, de la première accolade à la dernière."); return true; }
+          setTimeout(() => ingest(d), 60);
+          return false;
+        } },
+      { label: "Annuler" }
+    ]
+  });
+}
+
+/* --------------------------------- fusion : associer par intitulé */
+const norm = t => String(t).toLowerCase().normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+
+function keyMap(state){
+  const byPair = new Map(), byLabel = new Map(), dup = new Set();
+  state.categories.forEach(c => c.criteria.forEach(cr => {
+    byPair.set(norm(c.name) + "|" + norm(cr.label), cr.id);
+    const l = norm(cr.label);
+    if(byLabel.has(l)) dup.add(l); else byLabel.set(l, cr.id);
+  }));
+  dup.forEach(l => byLabel.delete(l));
+  return { byPair, byLabel };
+}
+
+function mergeIn(d){
+  const mine = keyMap(S);
+  const info = new Map();
+  d.categories.forEach(c => c.criteria.forEach(cr =>
+    info.set(cr.id, { pair: norm(c.name) + "|" + norm(cr.label), lab: norm(cr.label), label: cr.label })));
+
+  let added = 0, matched = 0;
+  const missed = new Set();
+  const strong = [];
+  d.categories.forEach(c => c.criteria.forEach(cr => {
+    if(cr.imp >= 4) strong.push({ l: cr.label, i: cr.imp });
+  }));
+  strong.sort((a, b) => b.i - a.i);
+  const grid = strong.length
+    ? "Ce qui compte le plus dans sa grille à lui (4 et 5 sur 5) : "
+      + strong.slice(0, 20).map(x => x.l).join(" · ") + (strong.length > 20 ? " …" : "")
+    : "";
+
+  d.profiles.forEach(p => {
+    const scores = {};
+    for(const id in (p.scores || {})){
+      const k = info.get(id); if(!k) continue;
+      const target = mine.byPair.get(k.pair) || mine.byLabel.get(k.lab);
+      if(target){ scores[target] = p.scores[id]; matched++; } else missed.add(k.label);
+    }
+    const notes = [p.notes || "", grid].filter(Boolean).join("\n\n");
+    S.profiles.push({ id: uid(), name: (p.name || "Sans nom") + " · reçu",
+      met: p.met || "", notes, scores });
+    added++;
+  });
+  return { added, matched, missed: [...missed] };
+}
+
+async function ingest(d){
+  if(d && d.enc === 1){
+    if(!SUB){ alert("Ce contenu est chiffré et ce navigateur ne peut pas le déchiffrer ici."); return; }
+    let bad = "";
+    for(;;){
+      const pass = await askPass({
+        title: "Contenu chiffré", ok: "Ouvrir", err: bad,
+        msg: "Ces données sont protégées. Saisis le mot de passe utilisé au moment de l'export — si elles viennent de quelqu'un d'autre, c'est le sien, pas le tien."
+      });
+      if(pass === null) return;
+      try{ d = (await Lock.open(d, pass)).data; break; }
+      catch(e){ bad = "Mot de passe incorrect."; }
+    }
+  }
+  if(!d || !Array.isArray(d.categories) || !Array.isArray(d.profiles)){
+    await box({ title: "Format non reconnu", msg: "Ce contenu n'est pas un export de cette application.",
+      buttons: [{ label: "Fermer", primary: true }] });
+    return;
+  }
+
+  const noms = d.profiles.map(p => p.name || "Sans nom").join(", ");
+  const choice = await box({
+    title: "Que faire de ces données ?",
+    msg: `Le contenu reçu comporte ${d.profiles.length} fiche${d.profiles.length > 1 ? "s" : ""} : ${noms}. Tu peux les ajouter aux tiennes, ou tout remplacer — dans ce cas tes fiches et ta grille actuelles seront perdues.`,
+    buttons: [
+      { label: "Ajouter à mes fiches", primary: true },
+      { label: "Tout remplacer" },
+      { label: "Annuler" }
+    ]
+  });
+
+  if(choice === 0){
+    const r = mergeIn(d);
+    renderPeople(); syncAll(); save();
+    let m = `${r.added} fiche${r.added > 1 ? "s ajoutées" : " ajoutée"}, ${r.matched} note${r.matched > 1 ? "s" : ""} rattachée${r.matched > 1 ? "s" : ""} à tes critères.`;
+    if(r.missed.length) m += ` ${r.missed.length} critère${r.missed.length > 1 ? "s" : ""} de son côté n'existe${r.missed.length > 1 ? "nt" : ""} pas chez toi, ${r.missed.length > 1 ? "leurs notes ont" : "sa note a"} été ignorée${r.missed.length > 1 ? "s" : ""} : ${r.missed.slice(0, 6).join(" · ")}${r.missed.length > 6 ? "…" : ""}`;
+    m += " Ses niveaux d'importance ne sont pas repris : la grille d'importance reste la tienne.";
+    await box({ title: "Fiches ajoutées", msg: m, buttons: [{ label: "Voir", primary: true }] });
+  }
+  else if(choice === 1){
+    S = d;
+    if(!S.profiles.length) S.profiles = [newProfile("")];
+    if(!S.profiles.some(p => p.id === S.active)) S.active = S.profiles[0].id;
+    applyTheme(); applyGlitter(); buildCats(); loadProfile(); showSec(); idle(); save();
+  }
+}
+
+async function toggleLink(){
+  if(!FS_OK) return;
+  if(FileLink.ok){
+    if(!confirm(`Ne plus écrire dans « ${FileLink.name} » ? Le fichier restera sur ton disque, il cessera simplement d'être mis à jour.`)) return;
+    await FileLink.forget(); showSec(); return;
+  }
+  if(FileLink.handle){
+    if(!await FileLink.reconnect()){ showSec(); return; }
+    const raw = await FileLink.read();
+    if(raw && stamp(raw) > stamp(S) && !raw.enc &&
+       confirm("Le fichier contient une version plus récente que celle affichée. La charger ?")){
+      S = raw;
+      if(!S.profiles.some(p => p.id === S.active)) S.active = S.profiles[0].id;
+      buildCats(); loadProfile();
+    }
+    showSec(); await flush(); return;
+  }
+  try{ await FileLink.choose(); }
+  catch(e){ return; }
+  showSec(); clearTimeout(saveT); await flush();
+}
+
+async function managePass(){
+  if(!SUB){ alert("Le chiffrement demande une connexion sécurisée (https) ou un fichier ouvert localement. Ce navigateur ne le permet pas ici."); return; }
+  const pass = await askPass({
+    title: Lock.on ? "Nouveau mot de passe" : "Protéger tes fiches",
+    msg: Lock.on
+      ? "Choisis un nouveau mot de passe. L'ancien cessera de fonctionner dès l'enregistrement."
+      : "Tes fiches seront chiffrées sur cet appareil, et tes exports aussi. Aucune récupération n'est possible : si tu oublies ce mot de passe, les données deviennent définitivement illisibles.",
+    ok: Lock.on ? "Remplacer" : "Activer", twice: true
+  });
+  if(!pass) return;
+  await Lock.setPass(pass);
+  clearTimeout(saveT); await flush(); showSec(); idle();
+}
+async function unprotect(){
+  if(!confirm("Retirer la protection ? Tes fiches redeviendront lisibles par toute personne qui ouvre cette page sur cet appareil.")) return;
+  Lock.clear(); clearTimeout(idleT); clearTimeout(saveT);
+  await flush(); showSec();
+}
+$("#filein").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  let d;
+  try{ d = JSON.parse(await f.text()); }
+  catch(err){ d = null; }
+
+  $("#box").hidden = true;
+  await ingest(d);
+});
+
+/* ------------------------------------------------------------- thèmes */
+function applyTheme(){
+  document.documentElement.dataset.theme = S.theme;
+  document.querySelectorAll("[data-theme-set]").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.themeSet === S.theme));
+  drawFlower();
+}
+document.querySelectorAll("[data-theme-set]").forEach(b => b.onclick = () => {
+  S.theme = b.dataset.themeSet;
+  if(S.theme === "pastel") S.glitter = true;
+  applyTheme(); applyGlitter(); save();
+});
+
+/* ---------------------------------------------------------- paillettes */
+const cv = $("#glitter"), ctx = cv.getContext("2d"), halo = $("#halo");
+let parts = [], raf = null, glitterOn = true;
+const mq = (q, fallback) => { try{ return matchMedia(q).matches; }catch(e){ return fallback; } };
+const reduce = mq("(prefers-reduced-motion: reduce)", false);
+const fine = mq("(pointer: fine)", true);
+const PAL = ["#FFB8D9", "#FFD8A8", "#FFF3B0", "#B8F0D0", "#A8E0F0", "#C5C0FF", "#F0C0F5"];
+
+function fit(){
+  const d = devicePixelRatio || 1;
+  cv.width = innerWidth * d; cv.height = innerHeight * d;
+  cv.style.width = innerWidth + "px"; cv.style.height = innerHeight + "px";
+  ctx.setTransform(d, 0, 0, d, 0, 0);
+}
+addEventListener("resize", fit); fit();
+
+function applyGlitter(){
+  glitterOn = S.glitter && !reduce && fine;
+  $("#glitState").textContent = S.glitter ? "on" : "off";
+  cv.style.display = glitterOn ? "" : "none";
+  halo.style.display = glitterOn && S.theme === "pastel" ? "" : "none";
+  if(!glitterOn){ parts = []; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+addEventListener("mousemove", e => {
+  if(!glitterOn) return;
+  halo.style.left = e.clientX + "px"; halo.style.top = e.clientY + "px"; halo.style.opacity = ".9";
+  const k = 2;
+  for(let i = 0; i < k; i++){
+    parts.push({
+      x: e.clientX + (Math.random() - .5) * 12,
+      y: e.clientY + (Math.random() - .5) * 12,
+      vx: (Math.random() - .5) * 1.4,
+      vy: (Math.random() - .5) * 1.4 - .3,
+      r: 2.5 + Math.random() * 4,
+      rot: Math.random() * 6.28,
+      vr: (Math.random() - .5) * .22,
+      life: 0, max: 38 + Math.random() * 30,
+      col: PAL[(Math.random() * PAL.length) | 0]
+    });
+  }
+  if(parts.length > 400) parts.splice(0, parts.length - 400);
+  if(!raf) raf = requestAnimationFrame(tick);
+});
+
+function sparkle(p, alpha){
+  const r = p.r * (1 - p.life / p.max * .65);
+  ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+  ctx.globalAlpha = alpha; ctx.fillStyle = p.col;
+  ctx.beginPath();
+  ctx.moveTo(0, -r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.quadraticCurveTo(0, 0, 0, r);
+  ctx.quadraticCurveTo(0, 0, -r, 0);
+  ctx.quadraticCurveTo(0, 0, 0, -r);
+  ctx.fill(); ctx.restore();
+}
+
+function tick(){
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  for(let i = parts.length - 1; i >= 0; i--){
+    const p = parts[i];
+    p.life++;
+    if(p.life > p.max){ parts.splice(i, 1); continue; }
+    p.x += p.vx; p.y += p.vy; p.vy += .045; p.vx *= .985; p.rot += p.vr;
+    sparkle(p, Math.min(1, (1 - p.life / p.max) * 1.6));
+  }
+  if(parts.length){ raf = requestAnimationFrame(tick); }
+  else { raf = null; halo.style.opacity = "0"; }
+}
+
+/* ------------------------------------------------------- sauvegarde */
+let saveT = null;
+async function flush(){
+  if(locked) return;
+  S.updated = Date.now();
+  const payload = Lock.on && Lock.key ? await Lock.seal(S) : S;
+  await Store.set(payload);
+  await FileLink.write(payload);
+  const s = $("#saved");
+  s.textContent = (Lock.on ? "Enregistré, chiffré" : "Enregistré") + (FileLink.ok ? " + fichier" : "");
+  s.classList.add("show");
+  setTimeout(() => s.classList.remove("show"), 900);
+  idle();
+}
+function save(){
+  clearTimeout(saveT);
+  saveT = setTimeout(flush, 350);
+}
+
+/* --------------------------------------------- verrouillage auto 15 min */
+let locked = false, idleT = null;
+function idle(){
+  clearTimeout(idleT);
+  if(!Lock.on) return;
+  idleT = setTimeout(lockNow, 15 * 60 * 1000);
+}
+async function lockNow(){
+  if(!Lock.on || locked) return;
+  clearTimeout(saveT); await flush();
+  locked = true; Lock.key = null;
+  S = seed(); S.active = S.profiles[0].id;
+  catsEl.innerHTML = ""; peopleEl.innerHTML = "";
+  $("#pname").value = ""; $("#pmet").value = ""; $("#pnotes").value = "";
+  $("#totalVal").textContent = "—"; $("#totalMeta").textContent = "";
+  $("#flower").innerHTML = "";
+  await unlockLoop();
+}
+async function unlockLoop(){
+  const raw = await loadRaw();
+  let bad = "";
+  for(;;){
+    const pass = await askPass({
+      title: "Coffre verrouillé",
+      msg: "Saisis ton mot de passe pour retrouver tes fiches.",
+      ok: "Déverrouiller", cancel: false, err: bad
+    });
+    try{
+      const r = await Lock.open(raw, pass);
+      Lock.key = r.key; Lock.salt = r.salt; Lock.on = true;
+      S = r.data;
+      if(!S.profiles || !S.profiles.length) S.profiles = [newProfile("")];
+      if(!S.profiles.some(p => p.id === S.active)) S.active = S.profiles[0].id;
+      locked = false;
+      applyTheme(); applyGlitter(); buildCats(); loadProfile(); showSec(); idle();
+      const first = catsEl.firstElementChild;
+      if(first) openCat(first, true);
+      return;
+    }catch(e){
+      bad = "Mot de passe incorrect.";
+    }
+  }
+}
+function showSec(){
+  $("#passBtn").textContent = Lock.on ? "Changer le mot de passe" : "Protéger par un mot de passe";
+  $("#lockBtn").hidden = !Lock.on;
+  $("#unprotBtn").hidden = !Lock.on;
+  if(!SUB) $("#passBtn").hidden = true;
+  const where = (typeof window !== "undefined" && window.storage) ? "l'espace de stockage de cette application"
+    : (location.protocol === "file:" ? "ce navigateur, pour ce fichier local" : "ce navigateur, pour cette adresse");
+  const b = $("#linkBtn");
+  if(!FS_OK){ b.hidden = true; }
+  else if(FileLink.ok){ b.hidden = false; b.textContent = "Délier « " + FileLink.name + " »"; }
+  else if(FileLink.handle){ b.hidden = false; b.textContent = "Reconnecter « " + FileLink.name + " »"; }
+  else { b.hidden = false; b.textContent = "Lier un fichier de sauvegarde"; }
+
+  let txt = `Tes fiches sont enregistrées dans ${where}${Lock.on ? ", chiffrées par ton mot de passe" : ""}. Elles ne sont envoyées sur aucun serveur.`;
+  if(FileLink.ok) txt += ` Une copie est écrite dans « ${FileLink.name} » à chaque modification.`;
+  else if(FileLink.handle) txt += ` La sauvegarde vers « ${FileLink.name} » est en pause : reconnecte-la pour la réactiver.`;
+  else if(FS_OK) txt += " Lie un fichier de sauvegarde pour qu'elles survivent à un nettoyage du navigateur.";
+  else txt += " Pense à exporter de temps en temps : ce navigateur ne permet pas la sauvegarde automatique vers un fichier.";
+  $("#storeinfo").textContent = txt;
+}
+["mousemove", "keydown", "click"].forEach(ev => addEventListener(ev, () => { if(Lock.on && !locked) idle(); }, { passive: true }));
+
+/* ------------------------------------------------------------ démarrage */
+(async function init(){
+  await FileLink.init();
+  const d = await loadRaw();
+  if(d && d.enc === 1 && SUB){
+    Lock.on = true; locked = true;
+    applyTheme();
+    await unlockLoop();
+    showSec();
+    return;
+  }
+  if(d && d.categories && d.profiles){
+    S = d;
+    if(!S.profiles.length) S.profiles = [newProfile("")];
+    if(!S.profiles.some(p => p.id === S.active)) S.active = S.profiles[0].id;
+    S.categories.forEach(c => c.criteria.forEach(cr => { if(cr.imp === undefined) cr.imp = null; }));
+  }
+  applyTheme(); applyGlitter(); buildCats(); loadProfile(); showSec();
+  const first = catsEl.firstElementChild;
+  if(first) openCat(first, true);
+})();
+</script>
